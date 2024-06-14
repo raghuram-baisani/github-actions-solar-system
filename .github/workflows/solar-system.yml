@@ -49,3 +49,4 @@ jobs:
           name: Code-Coverage-Report
           path: coverage
           retention-days: 5
+        if: always()
