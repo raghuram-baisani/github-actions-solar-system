@@ -31,7 +31,6 @@ jobs:
           path: test-results.xml
         if: failure()
   code-coverage:
-  id: code-coverage
   runs-on: ubuntu-latest
   steps:
     - name: Checkout Repository
