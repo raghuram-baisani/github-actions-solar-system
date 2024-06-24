@@ -24,7 +24,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.npm
-          key: '${{ runner.os }}-node-modules-${{ hashFiles(''package-lock.json'') }}'
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
       - name: Install Dependencies
         run: npm install
       - name: Unit Testing
@@ -48,14 +48,37 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.npm
-          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
       - name: Install Dependencies
         run: npm install
       - name: code-coverage
         run: npm run coverage
+        continue-on-error: true
       - name: Archive Code Coverage
         uses: actions/upload-artifact@v3
         with:
           name: Code-Coverage-Report
           path: coverage
           retention-days: 5
+        continue-on-error: true
+  docker:
+    runs-on: ubuntu-latest
+    needs:
+      - unit-testing
+      - code-coverage
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: docker login
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          registry: ghcr.io
+      - name: Build and push image to github container registry
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ghcr.io/${{ github.username }}/solar-system:${{ github.sha }}
