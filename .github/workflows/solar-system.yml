@@ -25,7 +25,7 @@ jobs:
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-        - name: Install Dependencies
+      - name: Install Dependencies
         run: npm install
       - name: Unit Testing
         run: npm test
@@ -36,26 +36,26 @@ jobs:
           path: test-results.xml
         if: failure()
   code-coverage:
-  runs-on: ubuntu-latest
-  steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v4
-    - name: Setup NodeJS Version
-      uses: actions/setup-node@v3
-      with:
-        node-version: 18
-    - name: Cache NPM dependencies
-      uses: actions/cache@v3
-      with:
-        path: ~/.npm
-        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-    - name: Install Dependencies
-      run: npm install
-    - name: code-coverage
-      run: npm run coverage
-    - name: Archive Code Coverage
-      uses: actions/upload-artifact@v3
-      with:
-        name: Code-Coverage-Report
-        path: coverage
-        retention-days: 5
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Setup NodeJS Version
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Cache NPM dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+      - name: Install Dependencies
+        run: npm install
+      - name: code-coverage
+        run: npm run coverage
+      - name: Archive Code Coverage
+        uses: actions/upload-artifact@v3
+        with:
+          name: Code-Coverage-Report
+          path: coverage
+          retention-days: 5
