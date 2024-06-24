@@ -21,11 +21,11 @@ jobs:
         with:
           node-version: 20
       - name: Cache NPM dependencies
-      uses: actions/cache@v3
-      with:
-        path: ~/.npm
-        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-      - name: Install Dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        - name: Install Dependencies
         run: npm install
       - name: Unit Testing
         run: npm test
