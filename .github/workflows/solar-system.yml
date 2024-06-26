@@ -108,4 +108,21 @@ jobs:
           method: kubeconfig
           kubeconfig: '${{ secrets.KUBECONFIG }}'
       - name: command to check installation status
-        run: kubectl version --short -o yaml
+        run: kubectl version  -o yaml
+      - name: setup environment variables
+        id: INGRESS_IP
+        run: |
+          echo "INGRESS_IP=kubectl -n ${{env.NAMESPACE}} get services ingress-nginx-controller -o jsonpath="{.status.loadBalancer.ingress[0].ip}"" >> $GITHUB_ENV
+      - name: replace tokens in the deployment files
+        uses: cschleiden/replace-tokens@v1
+        with:
+          files: '["kubernetes/development/*.yaml"]'
+          tokenPrefix: '_{_'
+          tokenSuffix: '_}_'
+        env:
+          NAMESPACE: ${{env.NAMESPACE}}
+          REPLICAS: ${{env.REPLICAS}}
+          IMAGE: ghcr.io/${{github.repository_owner}}/solar-system:${{github.sha}}
+          INGRESS_IP: ${{ steps.INGRESS_IP.outputs.INGRESS_IP }}
+      - name: check the files
+        run: cat kubernetes/development/*.yaml
