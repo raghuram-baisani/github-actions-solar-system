@@ -6,6 +6,7 @@ name: Solar System Workflow
       - main
       - feature/*
 permissions:
+  contents: read
   packages: write
 env:
   MONGO_URI: 'mongodb+srv://supercluster.d83jj.mongodb.net/superData'
