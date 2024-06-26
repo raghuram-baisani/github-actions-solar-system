@@ -99,13 +99,13 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
       - name: Install Kubectl
-        uses: azure/setup-kubectl@v4
+        uses: azure/setup-kubectl@v3
         with:
           version:  'v1.26.0'
       - name: set kubectl context
-        uses: azure/k8s-set-context@v4
+        uses: azure/k8s-set-context@v3
         with:
           method: kubeconfig
-          kubeconfig: ${{ secrets.KUBECONFIG }}
+          kubeconfig: '${{ secrets.KUBECONFIG }}'
       - name: command to check installation status
         run: kubectl version --short -o yaml
