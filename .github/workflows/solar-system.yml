@@ -31,4 +31,26 @@
             name: Mocha-Test-Result
             path: test-results.xml
           if: always()
+    code-coverage:
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout Repository
+          uses: actions/checkout@v4
+        - name: setup Node Js
+          uses: actions/setup-node@v4
+          with:
+            node-version: 18
+        - name: Install dependencies
+          run: |
+            npm install
+        - name: run code coverage
+          run: |
+            npm run code-coverage
+          continue-on-error: true
+        - name: Upload to artifcat
+          uses: actions/Upload-Artifact@latest
+          with:
+            name: Code-Coverage-Result
+            path: coverage
+            retention-days: 5
 
